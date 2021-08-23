@@ -3,17 +3,18 @@ import { useEffect, useState } from "react";
 import Message from "./Message";
 import Preview from "./Preview";
 import ResponseForm from "./ResponseForm";
-import { getMessagesFromIntent, writeToSheets } from "./sheets";
+import { getIntents, getMessagesFromIntent, writeToSheets } from "./sheets";
 import { Toast } from "./Toast";
 
-//TODO: autocompletado de intents
-//TODO: borrar items viejos de ese intent al subir de nuevo
+//TODO: terminar autocompletado de intents
 
 function App() {
 
   const [loading, setLoading] = useState(false)
   const [questionIntent, setQuestionIntent] = useState('');
   const [responseMessages, setResponseMessages] = useState<Message[]>([]);
+  const [knownIntents, setKnownIntents] = useState<string[]>([]);
+  const [fetchedIntents, setHasFetchedIntents] = useState(false);
 
   useEffect(() => {
     async function getMessages() {
@@ -22,10 +23,20 @@ function App() {
       setResponseMessages(messages)
       setLoading(false)
     }
+    async function fetchIntents() {
+      setLoading(true)
+      const intents = await getIntents()
+      setKnownIntents(intents)
+      setLoading(false)
+    }
     if (questionIntent.length >= 3) {
       getMessages()
     }
-  }, [questionIntent])
+    if (!fetchedIntents) {
+      fetchIntents()
+      setHasFetchedIntents(true)
+    }
+  }, [fetchedIntents, questionIntent])
 
   const reset = () => {
     setQuestionIntent('')
@@ -53,6 +64,7 @@ function App() {
       <Flex>
         <ResponseForm
           intent={questionIntent}
+          knownIntents={knownIntents}
           setQuestionIntent={setQuestionIntent}
           setResponseMessages={setResponseMessages}
         />

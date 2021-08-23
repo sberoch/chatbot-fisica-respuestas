@@ -15,6 +15,12 @@ const setup = async () => {
 export const writeToSheets = async (messages: Message[], intent: string) => {
   const doc = await setup()
   const sheet = doc.sheetsByIndex[0];
+  const rows = await sheet.getRows()
+  const rowsForIntent = rows.filter(row => row['Intent'] === intent)
+  for (const row of rowsForIntent.reverse()) {
+    console.log(row.rowIndex)
+    await row.delete()
+  }
   for (let message of messages) {
     await sheet.addRow({ Intent: intent, Tipo: message.type, Texto: message.text })
   }
