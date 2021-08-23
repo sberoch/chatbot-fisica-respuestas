@@ -1,7 +1,7 @@
 import { Button, Divider, Flex, Heading, Radio, RadioGroup, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import Message from "./Message";
-import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable';
 
 const placeholderMap: Record<string, string> = {
   text: 'Ingrese aqui su respuesta de texto',
@@ -46,11 +46,11 @@ const ResponseForm = ({ intent, setQuestionIntent, setResponseMessages, knownInt
           (Tambien puede agregar uno nuevo)
         </Text>
         <Flex w='100%'>
-          <Select
+          <CreatableSelect
             styles={styles}
             autoFocus={true}
             options={selectOptions}
-            defaultValue={{value: '', label: ''}}
+            value={{value: intent, label: intent}}
             onChange={(e) => setQuestionIntent(e?.label || '')}
           />
         </Flex>
