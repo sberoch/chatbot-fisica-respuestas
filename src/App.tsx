@@ -6,8 +6,6 @@ import ResponseForm from "./ResponseForm";
 import { getIntents, getMessagesFromIntent, writeToSheets } from "./sheets";
 import { Toast } from "./Toast";
 
-//TODO: terminar autocompletado de intents
-
 function App() {
 
   const [loading, setLoading] = useState(false)
@@ -45,13 +43,13 @@ function App() {
 
   const send = async () => {
     setLoading(true)
-    await getMessagesFromIntent(questionIntent)
     if (!questionIntent) {
       Toast({ type: "ERROR", title: 'Se debe especificar el intent que se quiere responder.' });
     } else if (!responseMessages || responseMessages.length === 0) {
       Toast({ type: "ERROR", title: 'Se debe incluir al menos un mensaje de respuesta.' });
     } else {
       await writeToSheets(responseMessages, questionIntent)
+      setKnownIntents(prev => [...prev, questionIntent])
       Toast({ type: "SUCCESS", title: 'Enviado con éxito.' });
       reset();
     }
