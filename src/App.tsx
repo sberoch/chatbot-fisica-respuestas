@@ -51,7 +51,7 @@ function App() {
       await writeToSheets(responseMessages, questionIntent)
       setKnownIntents(prev => [...prev, questionIntent])
       Toast({ type: "SUCCESS", title: 'Enviado con éxito.' });
-      reset();
+      reset(); 
     }
     setLoading(false)
   }
